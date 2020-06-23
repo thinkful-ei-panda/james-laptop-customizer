@@ -1,26 +1,78 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import Header from './Header';
+import CustomizeForm from './CustomizeForm';
+import Cart from './Cart';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+/*CLASS COMPONENT TO HOLD STATE AND RENDER THE APP*/
+class App extends Component {
+
+  state = {
+    selected: {
+      Processor: {
+        name: '17th Generation Intel Core HB (7 Core with donut spare)',
+        cost: 700
+      },
+      'Operating System': {
+        name: 'Ubuntu Linux 16.04',
+        cost: 200
+      },
+      'Video Card': {
+        name: 'Toyota Corolla 1.5v',
+        cost: 1150.98
+      },
+      Display: {
+        name: '15.6" UHD (3840 x 2160) 60Hz Bright Lights and Knobs',
+        cost: 1500
+      }
+    }
+  };
+
+  
+
+  updateFeature = (feature, newValue) => {
+    const selected = Object.assign({}, this.state.selected);
+    selected[feature] = newValue;
+    this.setState(
+      {selected}
+    );
+  };
+
+
+
+  /*This object will allow us to easily 
+  convert numbers into US dollar values*/
+  USCurrencyFormat = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  });
+
+
+
+  render() {
+    return (
+      <div className="App">
+
+        <Header/>
+        
+        <main>
+          <CustomizeForm 
+            features={this.props.features} 
+            format={this.USCurrencyFormat.format} 
+            selected={this.state.selected} 
+            updateFeature={this.updateFeature} 
+          />
+
+          <Cart 
+            format={this.USCurrencyFormat.format} 
+            selected={this.state.selected} 
+          />
+        </main>
+
+      </div>
+    );
+  };
+};
+
 
 export default App;
